@@ -143,6 +143,9 @@ escolher encerrar antes de realizar qualquer cálculo.
    **então** o resultado corresponde aos dados atuais, sem reutilização automática dos anteriores.
 3. **Dada** a escolha de operação, no início ou após um cálculo, **quando** o usuário escolhe
    encerrar, **então** recebe uma confirmação de encerramento e não há novas solicitações.
+4. **Dada** a escolha de operação, **quando** informa `9`, **então** recebe uma mensagem de
+   operação inválida e o menu é apresentado novamente; **quando** escolhe `0` nesse menu,
+   **então** recebe a confirmação de encerramento, sem solicitação de operandos nem novas entradas.
 
 ### Casos de borda
 

@@ -61,6 +61,7 @@ entrada é novamente uma opção do menu. Não enviar as sequências como uma ú
 | Precisão excessiva | `1`; `0,1234567`; `0,1234560`; `0`; `0` | Erro de precisão, repetir operando, resultado 0,123456 |
 | Resultado excessivo | `1`; `1000000000`; `0,000001`; `2`; `5`; `2`; `0` | Erro de resultado, menu, novo cálculo sem dados antigos, resultado 3 |
 | Saída imediata | `0` | Confirmação de encerramento sem pedir operandos |
+| Encerramento após opção inválida | `9`; `0` | Erro e menu reapresentado após `9`; confirmação de encerramento após `0`, sem operandos ou novas entradas |
 
 ## Validações adicionais
 
