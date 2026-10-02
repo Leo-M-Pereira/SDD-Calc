@@ -16,8 +16,8 @@ Um item marcado indica qualidade satisfeita, não implementação concluída.
 
 ## Completude dos requisitos
 
-- [ ] Não restam marcadores de necessidade de clarificação.
-- [ ] Os requisitos são testáveis e não ambíguos.
+- [x] Não restam marcadores de necessidade de clarificação.
+- [x] Os requisitos são testáveis e não ambíguos.
 - [x] Os critérios de sucesso são mensuráveis.
 - [x] Os critérios de sucesso não dependem de tecnologia ou implementação.
 - [x] Os cenários de aceitação dos fluxos principais estão definidos.
@@ -27,7 +27,7 @@ Um item marcado indica qualidade satisfeita, não implementação concluída.
 
 ## Prontidão da funcionalidade
 
-- [ ] Todos os requisitos funcionais têm critérios de aceitação completos e claros.
+- [x] Todos os requisitos funcionais têm critérios de aceitação completos e claros.
 - [x] Os cenários do usuário cobrem os fluxos principais.
 - [x] Os resultados esperados estão cobertos pelos critérios de sucesso mensuráveis.
 - [x] Não há detalhes de implementação na especificação.
