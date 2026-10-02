@@ -49,6 +49,8 @@
 
 **Marco**: A história 1 oferece um cálculo válido e tem testes automatizados independentes.
 
+- [ ] T024 Validar o incremento da história 1 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
+
 ## Fase 4: História do usuário 2 — Entender e corrigir erros (Prioridade: P1)
 
 **Objetivo**: Explicar entradas e operações recusadas e recuperar o ponto correto sem perder dados válidos nem encerrar a sessão inesperadamente.
@@ -59,16 +61,18 @@
 
 ### Testes da história 2
 
-- [ ] T015 [P] [US2] Acrescentar testes para operação inválida, operando inválido no domínio, divisor zero e resultado bruto fora do intervalo, incluindo adição e subtração nas fronteiras em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
+- [ ] T015 [P] [US2] Acrescentar testes para operação inválida, operando inválido no domínio, divisor zero e resultados brutos fora do intervalo: adição/subtração nos limites inclusivos e valores externos, multiplicação de ±1000000000 por ±1 nos limites e por ±1,000001 fora, divisão de ±1000000000 por ±1 nos limites e por ±0,999999 fora; em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
 - [ ] T016 [P] [US2] Acrescentar testes para texto vazio/malformado, formatos proibidos, precisão excedida, limite de entrada e precedência de classificação em `tests/Calculator.Tests/NumberParserTests.cs`.
 - [ ] T017 [P] [US2] Acrescentar testes de sessão para menu repetido após operação inválida, repetição somente do operando inválido, preservação do operando válido, repetição do divisor e retorno ao menu após resultado excessivo em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
 
 ### Implementação da história 2
 
-- [ ] T018 [P] [US2] Implementar erros específicos para operação/operandos inválidos, divisão por zero e resultado fora do intervalo bruto, validando antes do arredondamento, em `src/Calculator/Domain/CalculatorEngine.cs`.
+- [ ] T018 [P] [US2] Implementar erros específicos para operação/operandos inválidos, divisão por zero e resultado fora do intervalo bruto; após rejeitar divisor zero, na divisão verificar `abs(first) > 1000000000 * abs(second)` antes de executar `/`, aceitar a igualdade no limite e validar o resultado bruto antes do arredondamento em `src/Calculator/Domain/CalculatorEngine.cs`.
 - [ ] T019 [P] [US2] Mapear erros de parsing e domínio para mensagens em português e aplicar recuperação aprovada: repetir menu, repetir somente o operando, repetir divisor ou descartar tentativa e voltar ao menu em `src/Calculator/Presentation/NumberParser.cs` e `src/Calculator/Presentation/ConsoleSession.cs`.
 
 **Marco**: Todos os erros previstos orientam o próximo pedido, preservam dados conforme FR-014 e permitem continuar na mesma sessão.
+
+- [ ] T025 Validar o incremento da história 2 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os casos de limite das quatro operações, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
 
 ## Fase 5: História do usuário 3 — Repetir cálculos e encerrar (Prioridade: P2)
 
@@ -80,13 +84,15 @@
 
 ### Testes da história 3
 
-- [ ] T020 [US3] Acrescentar testes para dois ou mais cálculos consecutivos, ausência de reutilização de operandos, dez cálculos, confirmação de saída e sequência `9` → erro/menu → `0` → encerramento sem novas entradas em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
+- [ ] T020 [US3] Acrescentar testes para dois ou mais cálculos consecutivos, ausência de reutilização de operandos, dez cálculos, confirmação de saída e sequência `9` → erro/menu → `0` → encerramento sem novas entradas; testar EOF no menu, no primeiro operando e no segundo operando, confirmando encerramento sem laço infinito, cálculo parcial ou resultado numérico em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
 
 ### Implementação da história 3
 
-- [ ] T021 [US3] Estender a sessão com laço de novos cálculos, limpar dados após cada resultado, preservar o descarte de falhas e confirmar encerramento sem leituras posteriores em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
+- [ ] T021 [US3] Estender a sessão com laço de novos cálculos, limpar dados após cada resultado e encerrar imediatamente quando a leitura retornar EOF no menu ou em qualquer operando, sem repetir a leitura em laço infinito, calcular com dados ausentes ou exibir resultado indevido; preservar o descarte de falhas e o encerramento sem leituras posteriores em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
 
 **Marco**: A sessão permanece ativa entre cálculos e termina somente pela escolha de encerramento ou fim defensivo do fluxo de entrada.
+
+- [ ] T026 Validar o incremento da história 3 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os três cenários de EOF, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
 
 ## Fase 6: Revisão final
 
@@ -101,10 +107,10 @@
 
 - **Preparação (Fase 1)**: T001 e T002 podem iniciar juntos; T003 depende de ambos.
 - **Tipos fundamentais (Fase 2)**: T004 e T005 dependem da preparação; podem ser feitos em paralelo.
-- **História 1 (Fase 3)**: os testes T006–T009 dependem da Fase 2 e podem ser escritos em paralelo. A implementação começa após esses testes; T010 precede T011–T013. T011, T012 e T013 alteram arquivos distintos e podem seguir em paralelo após T010. T014 depende do parser, motor e formatador.
-- **História 2 (Fase 4)**: depende da história 1. T015–T017 são testes em arquivos distintos e podem ser escritos em paralelo. Depois deles, T018 e T019 alteram arquivos distintos e podem ser implementados em paralelo.
-- **História 3 (Fase 5)**: depende da história 2 para cobrir a opção inválida seguida de saída. T020 deve preceder T021.
-- **Revisão final (Fase 6)**: T022 depende das três histórias; T023 depende de compilação e testes aprovados em T022.
+- **História 1 (Fase 3)**: os testes T006–T009 dependem da Fase 2 e podem ser escritos em paralelo. A implementação começa após esses testes; T010 precede T011–T013. T011, T012 e T013 alteram arquivos distintos e podem seguir em paralelo após T010. T014 depende do parser, motor e formatador; T024 depende de T014 e de T006–T009 e deve passar antes do commit da história 1.
+- **História 2 (Fase 4)**: depende da história 1 e do gate aprovado T024. T015–T017 são testes em arquivos distintos e podem ser escritos em paralelo. Depois deles, T018 e T019 alteram arquivos distintos e podem ser implementados em paralelo; T025 depende de T018, T019 e T015–T017 e deve passar antes do commit da história 2.
+- **História 3 (Fase 5)**: depende da história 2 e do gate aprovado T025 para cobrir a opção inválida seguida de saída. T020 deve preceder T021; T026 depende de T021 e de todos os testes existentes e deve passar antes do commit da história 3.
+- **Revisão final (Fase 6)**: T022 continua obrigatório após as três histórias e repete a compilação e todos os testes como validação final; T023 depende de compilação e testes aprovados em T022.
 
 ### Oportunidades de paralelismo
 
@@ -129,6 +135,7 @@ Tarefas marcadas `[P]` usam arquivos diferentes e não dependem de outra tarefa 
 
 1. Adicionar a história 2 e validar mensagens, limites e recuperação sem regressões nos cálculos válidos.
 2. Adicionar a história 3 e validar repetição, limpeza de operandos e todas as saídas.
-3. Rodar compilação, suíte automatizada e guia de aceitação antes de concluir.
+3. Ao concluir cada história, executar compilação e todos os testes existentes antes do respectivo commit (T024, T025 e T026).
+4. Após as histórias, manter a validação final de compilação e suíte automatizada (T022) e percorrer o guia de aceitação (T023).
 
 Cada incremento deve permanecer pequeno, passar por revisão de conformidade e ser registrado em commit próprio ou grupo lógico, conforme o princípio VIII. Esta lista planeja o trabalho; não registra execução.

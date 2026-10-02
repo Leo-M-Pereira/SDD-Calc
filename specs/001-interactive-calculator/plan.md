@@ -145,19 +145,21 @@ alterar o estado global de `Console`. Não criar interface de console própria.
 | Resultado válido | Escolha de operação | Nenhum dado reutilizado automaticamente |
 | Encerrar no menu | Nenhum pedido | Sessão encerrada |
 
-Fim da entrada não será tratado como número inválido em laço infinito: interromper a leitura
-sem tentar calcular com dados ausentes. É um cuidado técnico de leitura; o cenário de saída
-voluntária segue sendo exclusivamente a opção do menu, conforme a especificação.
+Fim da entrada no menu, no primeiro operando ou no segundo operando não será tratado como
+entrada inválida em laço infinito: encerrar a sessão assim que a leitura retornar EOF, sem
+tentar calcular com dados ausentes nem apresentar resultado parcial ou indevido. É um cuidado
+técnico de leitura; o cenário de saída voluntária segue sendo exclusivamente a opção do menu,
+conforme a especificação.
 
 ### Estratégia de testes e rastreabilidade
 
 | Grupo | Verificações necessárias | Requisitos/critérios |
 |---|---|---|
 | Cálculo puro | Quatro operações, ordem, negativos, zero, frações exatas e periódicas | FR-002/003/007; SC-001 |
-| Domínio e fronteiras | Extremos inclusivos, precisão, entradas inválidas diretas, resultado bruto excessivo, divisor zero | FR-007/013; SC-001/002 |
+| Domínio e fronteiras | Extremos inclusivos e valores externos para adição, subtração, multiplicação e divisão; na divisão, confirmar rejeição pela magnitude antes de executar a divisão; precisão, entradas inválidas diretas e divisor zero | FR-007/013; SC-001/002 |
 | Parsing | Vírgula, espaços externos, zeros finais, sintaxe proibida, seis versus sete casas, texto numérico enorme | FR-006/012/013; SC-002 |
 | Formatação | `0,3`, `3,5`, `0,333333`, empates dos dois sinais, zeros finais e zero sem sinal | FR-004/013; SC-001/006 |
-| Sessão em memória | Erros repetidos, preservação, retorno ao menu, dez cálculos e saída nos dois momentos | FR-001/005/006/008/009/010/011/014; SC-002 a SC-006 |
+| Sessão em memória | Erros repetidos, preservação, retorno ao menu, dez cálculos, saídas nos momentos previstos e EOF no menu, primeiro operando e segundo operando, sem laço infinito ou resultado parcial | FR-001/005/006/008/009/010/011/014; SC-002 a SC-006 |
 
 Testes devem verificar valores esperados independentes da implementação, mensagens relevantes
 e ordem das solicitações; evitar snapshots completos de transcrições ou testes que copiem o

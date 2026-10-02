@@ -72,6 +72,15 @@ incluem parte decimal. Qualquer valor arredondado a zero aparece como `0`.
 | -0,000001 ÷ 2 | `-0,000001` |
 | -1 ÷ 10000000 | `0` |
 | 1000000000 + 0,000001 | Erro de limite; nenhuma saída numérica |
+| 1000000000 × 1 | `1000000000` (limite inclusivo) |
+| 1000000000 × 1,000001 | Erro de limite; nenhuma saída numérica |
+| -1000000000 × 1 | `-1000000000` (limite inclusivo) |
+| -1000000000 × 1,000001 | Erro de limite; nenhuma saída numérica |
+| 1000000000 ÷ 1 | `1000000000` (limite inclusivo) |
+| 1000000000 ÷ 0,999999 | Erro de limite; nenhuma saída numérica; verificar a magnitude antes de dividir |
+| -1000000000 ÷ 1 | `-1000000000` (limite inclusivo) |
+| -1000000000 ÷ 0,999999 | Erro de limite; nenhuma saída numérica; verificar a magnitude antes de dividir |
 
-Fim de entrada não é um código de menu: parar a leitura sem resultado parcial. Esse cuidado
-não amplia os cenários de saída voluntária definidos na especificação.
+Fim de entrada no menu, no primeiro operando ou no segundo operando não é uma entrada inválida:
+parar a leitura sem laço infinito, cálculo com dados ausentes ou resultado parcial/indevido. Esse
+cuidado não amplia os cenários de saída voluntária definidos na especificação.

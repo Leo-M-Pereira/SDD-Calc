@@ -60,6 +60,10 @@ entrada é novamente uma opção do menu. Não enviar as sequências como uma ú
 | Entrada excessiva | `1`; `1000000000,000001`; `2`; `3`; `0` | Erro de intervalo, repetir primeiro número, resultado 5 |
 | Precisão excessiva | `1`; `0,1234567`; `0,1234560`; `0`; `0` | Erro de precisão, repetir operando, resultado 0,123456 |
 | Resultado excessivo | `1`; `1000000000`; `0,000001`; `2`; `5`; `2`; `0` | Erro de resultado, menu, novo cálculo sem dados antigos, resultado 3 |
+| Multiplicação no limite | `3`; `1000000000`; `1`; `0` | Resultado `1000000000` no limite inclusivo e encerramento |
+| Multiplicação acima do limite | `3`; `1000000000`; `1,000001`; `0` | Erro de resultado sem valor numérico e retorno ao menu |
+| Divisão no limite | `4`; `-1000000000`; `1`; `0` | Resultado `-1000000000` no limite inclusivo e encerramento |
+| Divisão acima do limite | `4`; `1000000000`; `0,999999`; `0` | Erro de resultado sem valor numérico; rejeitar pela magnitude antes da divisão e retornar ao menu |
 | Saída imediata | `0` | Confirmação de encerramento sem pedir operandos |
 | Encerramento após opção inválida | `9`; `0` | Erro e menu reapresentado após `9`; confirmação de encerramento após `0`, sem operandos ou novas entradas |
 
@@ -71,6 +75,7 @@ entrada é novamente uma opção do menu. Não enviar as sequências como uma ú
 - Verificar que espaços externos e zeros finais excedentes são aceitos conforme o contrato.
 - Confirmar que cada erro mantém o ponto de retomada de FR-014, inclusive erros consecutivos.
 - Executar com ambiente de cultura diferente; entrada e saída continuam usando vírgula.
+- Simular fim de entrada no menu, no primeiro operando e no segundo operando; a sessão deve terminar sem repetir leitura indefinidamente ou exibir resultado parcial.
 
 ## Critério de conclusão posterior
 
