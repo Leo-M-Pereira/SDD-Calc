@@ -13,16 +13,16 @@
 
 **Objetivo**: Criar, durante a implementação, a aplicação e o projeto de testes conforme o plano.
 
-- [ ] T001 [P] Criar o projeto de console C# com alvo `net10.0` e ponto de entrada inicial em `src/Calculator/Calculator.csproj` e `src/Calculator/Program.cs`.
-- [ ] T002 [P] Criar o projeto MSTest para `net10.0` usando VSTest em `tests/Calculator.Tests/Calculator.Tests.csproj` e `tests/Calculator.Tests/UnitTest1.cs`.
-- [ ] T003 Adicionar referência do projeto de testes ao executável e remover qualquer arquivo de exemplo remanescente em `tests/Calculator.Tests/Calculator.Tests.csproj` e `tests/Calculator.Tests/UnitTest1.cs`.
+- [X] T001 [P] Criar o projeto de console C# com alvo `net10.0` e ponto de entrada inicial em `src/Calculator/Calculator.csproj` e `src/Calculator/Program.cs`.
+- [X] T002 [P] Criar o projeto MSTest para `net10.0` usando VSTest em `tests/Calculator.Tests/Calculator.Tests.csproj` e `tests/Calculator.Tests/Test1.cs`.
+- [X] T003 Adicionar referência do projeto de testes ao executável e remover o arquivo de exemplo em `tests/Calculator.Tests/Calculator.Tests.csproj` e `tests/Calculator.Tests/Test1.cs`.
 
 ## Fase 2: Tipos fundamentais
 
 **Objetivo**: Definir os tipos de domínio compartilhados antes das histórias.
 
-- [ ] T004 [P] Definir os valores `Addition`, `Subtraction`, `Multiplication` e `Division` em `src/Calculator/Domain/Operation.cs`.
-- [ ] T005 [P] Definir `CalculationResult` e `CalculationError` (`None`, `InvalidOperation`, `InvalidOperand`, `DivisionByZero`, `ResultOutOfRange`) com valor presente somente em sucesso em `src/Calculator/Domain/CalculationResult.cs`.
+- [X] T004 [P] Definir os valores `Addition`, `Subtraction`, `Multiplication` e `Division` em `src/Calculator/Domain/Operation.cs`.
+- [X] T005 [P] Definir `CalculationResult` e `CalculationError` (`None`, `InvalidOperation`, `InvalidOperand`, `DivisionByZero`, `ResultOutOfRange`) com valor presente somente em sucesso em `src/Calculator/Domain/CalculationResult.cs`.
 
 **Marco**: Concluir T001–T005 antes das histórias. Não adicionar estrutura de infraestrutura sem necessidade demonstrada.
 
@@ -34,22 +34,22 @@
 
 ### Testes da história 1
 
-- [ ] T006 [P] [US1] Escrever testes parametrizados das quatro operações, ordem, negativos, zero, resultados inteiros/decimais e operandos nos extremos inclusivos em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
-- [ ] T007 [P] [US1] Escrever testes de parsing para inteiros e decimais com vírgula, sinais, espaços externos, zeros finais e operandos válidos nos limites em `tests/Calculator.Tests/NumberParserTests.cs`.
-- [ ] T008 [P] [US1] Escrever testes de apresentação para até seis casas, desempate positivo e negativo para longe de zero, remoção de zeros finais e normalização de zero em `tests/Calculator.Tests/ResultFormatterTests.cs`.
-- [ ] T009 [P] [US1] Escrever testes da interação de um cálculo válido por operação, opções exibidas e encerramento antes do primeiro cálculo em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
+- [X] T006 [P] [US1] Escrever testes parametrizados das quatro operações, ordem, negativos, zero, resultados inteiros/decimais e operandos nos extremos inclusivos em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
+- [X] T007 [P] [US1] Escrever testes de parsing para inteiros e decimais com vírgula, sinais, espaços externos, zeros finais e operandos válidos nos limites em `tests/Calculator.Tests/NumberParserTests.cs`.
+- [X] T008 [P] [US1] Escrever testes de apresentação para até seis casas, desempate positivo e negativo para longe de zero, remoção de zeros finais e normalização de zero em `tests/Calculator.Tests/ResultFormatterTests.cs`.
+- [X] T009 [P] [US1] Escrever testes da interação de um cálculo válido por operação, opções exibidas e encerramento antes do primeiro cálculo em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
 
 ### Implementação da história 1
 
-- [ ] T010 [US1] Implementar `NumberPolicy` para validar operandos entre -1000000000 e 1000000000 inclusive e até seis casas decimais efetivas sem arredondar em `src/Calculator/Domain/NumberPolicy.cs`.
-- [ ] T011 [P] [US1] Implementar parsing da gramática do contrato, `Trim`, zeros fracionários finais, cultura `pt-BR` explícita e classificação de formato, precisão e intervalo em `src/Calculator/Presentation/NumberParser.cs` e `src/Calculator/Presentation/InputError.cs`.
-- [ ] T012 [P] [US1] Implementar cálculo das quatro operações sobre `decimal`, preservando operandos originais e retornando resultado tipado em `src/Calculator/Domain/CalculatorEngine.cs`.
-- [ ] T013 [P] [US1] Implementar formatação `pt-BR` com seis casas máximas, arredondamento `AwayFromZero`, sem zeros finais e zero sem sinal em `src/Calculator/Presentation/ResultFormatter.cs`.
-- [ ] T014 [US1] Implementar a interação inicial para apresentar o menu, ler operação e dois operandos, exibir um resultado e aceitar encerramento no menu, conectando leitura/escrita em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
+- [X] T010 [US1] Implementar `NumberPolicy` para validar operandos entre -1000000000 e 1000000000 inclusive e até seis casas decimais efetivas sem arredondar em `src/Calculator/Domain/NumberPolicy.cs`.
+- [X] T011 [P] [US1] Implementar parsing da gramática do contrato, `Trim`, zeros fracionários finais, cultura `pt-BR` explícita e classificação de formato, precisão e intervalo em `src/Calculator/Presentation/NumberParser.cs` e `src/Calculator/Presentation/InputError.cs`.
+- [X] T012 [P] [US1] Implementar cálculo das quatro operações sobre `decimal`, preservando operandos originais e retornando resultado tipado em `src/Calculator/Domain/CalculatorEngine.cs`.
+- [X] T013 [P] [US1] Implementar formatação `pt-BR` com seis casas máximas, arredondamento `AwayFromZero`, sem zeros finais e zero sem sinal em `src/Calculator/Presentation/ResultFormatter.cs`.
+- [X] T014 [US1] Implementar a interação inicial para apresentar o menu, ler operação e dois operandos, exibir um resultado e aceitar encerramento no menu, conectando leitura/escrita em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
 
 **Marco**: A história 1 oferece um cálculo válido e tem testes automatizados independentes.
 
-- [ ] T024 Validar o incremento da história 1 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
+- [X] T024 Validar o incremento da história 1 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
 
 ## Fase 4: História do usuário 2 — Entender e corrigir erros (Prioridade: P1)
 
