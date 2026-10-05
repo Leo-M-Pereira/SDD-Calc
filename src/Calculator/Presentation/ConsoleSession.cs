@@ -50,6 +50,7 @@ public sealed class ConsoleSession
                 : "Informe o segundo número: ";
 
             var restartMenu = false;
+            var calculationCompleted = false;
             while (TryReadOperand(secondPrompt, out var second))
             {
                 var result = _engine.Calculate(operation, first, second);
@@ -69,12 +70,14 @@ public sealed class ConsoleSession
                 if (result.IsSuccess && result.Value is decimal value)
                 {
                     _output.WriteLine($"Resultado: {ResultFormatter.Format(value)}");
+                    calculationCompleted = true;
+                    break;
                 }
 
                 return;
             }
 
-            if (restartMenu)
+            if (restartMenu || calculationCompleted)
             {
                 continue;
             }

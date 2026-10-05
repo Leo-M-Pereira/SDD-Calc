@@ -59,7 +59,7 @@ public sealed class ConsoleSessionTests
         var transcript = output.ToString();
         StringAssert.Contains(transcript, "Operação inválida.");
         StringAssert.Contains(transcript, "Resultado: 5");
-        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
+        Assert.AreEqual(3, CountOccurrences(transcript, "Calculadora"));
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public sealed class ConsoleSessionTests
         StringAssert.Contains(transcript, "Resultado: 5");
         Assert.AreEqual(2, CountOccurrences(transcript, repeatedPrompt));
         Assert.AreEqual(1, CountOccurrences(transcript, preservedPrompt));
-        Assert.AreEqual(1, CountOccurrences(transcript, "Calculadora"));
+        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
     }
 
     [TestMethod]
@@ -127,10 +127,124 @@ public sealed class ConsoleSessionTests
         var transcript = output.ToString();
         StringAssert.Contains(transcript, "O resultado excede o intervalo permitido.");
         StringAssert.Contains(transcript, "Resultado: 5");
-        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
+        Assert.AreEqual(3, CountOccurrences(transcript, "Calculadora"));
         Assert.AreEqual(2, CountOccurrences(transcript, "Informe o primeiro número:"));
         Assert.AreEqual(2, CountOccurrences(transcript, "Informe o segundo número"));
         Assert.AreEqual(1, CountOccurrences(transcript, "Resultado:"));
+    }
+
+    [TestMethod]
+    public void Run_ConsecutiveCalculations_UsesFreshOperandsForEachResult()
+    {
+        using var input = new StringReader(string.Join(Environment.NewLine, "1", "2", "3", "2", "5", "2", "0"));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        Assert.AreEqual(2, CountOccurrences(transcript, "Resultado:"));
+        StringAssert.Contains(transcript, "Resultado: 5");
+        StringAssert.Contains(transcript, "Resultado: 3");
+        Assert.AreEqual(2, CountOccurrences(transcript, "Informe o primeiro número:"));
+        Assert.AreEqual(2, CountOccurrences(transcript, "Informe o segundo número"));
+        Assert.AreEqual(3, CountOccurrences(transcript, "Calculadora"));
+        StringAssert.Contains(transcript, "Programa encerrado.");
+    }
+
+    [TestMethod]
+    public void Run_TenCalculations_CompletesInOneSession()
+    {
+        var lines = Enumerable.Range(0, 10)
+            .SelectMany(_ => new[] { "1", "1", "1" })
+            .Append("0");
+        using var input = new StringReader(string.Join(Environment.NewLine, lines));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        Assert.AreEqual(10, CountOccurrences(transcript, "Resultado: 2"));
+        Assert.AreEqual(10, CountOccurrences(transcript, "Informe o primeiro número:"));
+        Assert.AreEqual(10, CountOccurrences(transcript, "Informe o segundo número:"));
+        Assert.AreEqual(11, CountOccurrences(transcript, "Calculadora"));
+        StringAssert.Contains(transcript, "Programa encerrado.");
+    }
+
+    [TestMethod]
+    public void Run_InvalidOptionThenExit_ConfirmsWithoutRequestingOperands()
+    {
+        using var input = new StringReader(string.Join(Environment.NewLine, "9", "0"));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        StringAssert.Contains(transcript, "Operação inválida.");
+        StringAssert.Contains(transcript, "Programa encerrado.");
+        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
+        Assert.IsFalse(transcript.Contains("primeiro número", StringComparison.OrdinalIgnoreCase));
+        Assert.IsFalse(transcript.Contains("segundo número", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [TestMethod]
+    public void Run_EndOfInputAtMenu_StopsAfterSingleReadWithoutResult()
+    {
+        using var input = new CountingTextReader();
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        Assert.AreEqual(1, input.ReadCount);
+        AssertNoPartialResultOrExitConfirmation(output.ToString());
+    }
+
+    [TestMethod]
+    public void Run_EndOfInputAtFirstOperand_StopsWithoutPartialCalculation()
+    {
+        using var input = new CountingTextReader("1");
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        Assert.AreEqual(2, input.ReadCount);
+        AssertNoPartialResultOrExitConfirmation(output.ToString());
+    }
+
+    [TestMethod]
+    public void Run_EndOfInputAtSecondOperand_StopsWithoutPartialCalculation()
+    {
+        using var input = new CountingTextReader("1", "2");
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        Assert.AreEqual(3, input.ReadCount);
+        AssertNoPartialResultOrExitConfirmation(output.ToString());
+    }
+
+    private static void AssertNoPartialResultOrExitConfirmation(string transcript)
+    {
+        Assert.IsFalse(transcript.Contains("Resultado:", StringComparison.Ordinal));
+        Assert.IsFalse(transcript.Contains("Programa encerrado.", StringComparison.Ordinal));
+    }
+
+    private sealed class CountingTextReader(params string[] lines) : TextReader
+    {
+        private readonly Queue<string> _lines = new(lines);
+
+        public int ReadCount { get; private set; }
+
+        public override string? ReadLine()
+        {
+            ReadCount++;
+            return _lines.TryDequeue(out var line) ? line : null;
+        }
     }
 
     private static int CountOccurrences(string text, string value) =>

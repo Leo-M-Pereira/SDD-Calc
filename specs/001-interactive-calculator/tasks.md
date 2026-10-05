@@ -84,15 +84,15 @@
 
 ### Testes da história 3
 
-- [ ] T020 [US3] Acrescentar testes para dois ou mais cálculos consecutivos, ausência de reutilização de operandos, dez cálculos, confirmação de saída e sequência `9` → erro/menu → `0` → encerramento sem novas entradas; testar EOF no menu, no primeiro operando e no segundo operando, confirmando encerramento sem laço infinito, cálculo parcial ou resultado numérico em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
+- [X] T020 [US3] Acrescentar testes para dois ou mais cálculos consecutivos, ausência de reutilização de operandos, dez cálculos, confirmação de saída e sequência `9` → erro/menu → `0` → encerramento sem novas entradas; testar EOF no menu, no primeiro operando e no segundo operando, confirmando encerramento sem laço infinito, cálculo parcial ou resultado numérico em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
 
 ### Implementação da história 3
 
-- [ ] T021 [US3] Estender a sessão com laço de novos cálculos, limpar dados após cada resultado e encerrar imediatamente quando a leitura retornar EOF no menu ou em qualquer operando, sem repetir a leitura em laço infinito, calcular com dados ausentes ou exibir resultado indevido; preservar o descarte de falhas e o encerramento sem leituras posteriores em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
+- [X] T021 [US3] Estender a sessão com laço de novos cálculos, limpar dados após cada resultado e encerrar imediatamente quando a leitura retornar EOF no menu ou em qualquer operando, sem repetir a leitura em laço infinito, calcular com dados ausentes ou exibir resultado indevido; preservar o descarte de falhas e o encerramento sem leituras posteriores em `src/Calculator/Presentation/ConsoleSession.cs` e `src/Calculator/Program.cs`.
 
 **Marco**: A sessão permanece ativa entre cálculos e termina somente pela escolha de encerramento ou fim defensivo do fluxo de entrada.
 
-- [ ] T026 Validar o incremento da história 3 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os três cenários de EOF, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
+- [X] T026 Validar o incremento da história 3 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os três cenários de EOF, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
 
 ## Fase 6: Revisão final
 
