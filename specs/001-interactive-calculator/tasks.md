@@ -61,18 +61,18 @@
 
 ### Testes da história 2
 
-- [ ] T015 [P] [US2] Acrescentar testes para operação inválida, operando inválido no domínio, divisor zero e resultados brutos fora do intervalo: adição/subtração nos limites inclusivos e valores externos, multiplicação de ±1000000000 por ±1 nos limites e por ±1,000001 fora, divisão de ±1000000000 por ±1 nos limites e por ±0,999999 fora; em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
-- [ ] T016 [P] [US2] Acrescentar testes para texto vazio/malformado, formatos proibidos, precisão excedida, limite de entrada e precedência de classificação em `tests/Calculator.Tests/NumberParserTests.cs`.
-- [ ] T017 [P] [US2] Acrescentar testes de sessão para menu repetido após operação inválida, repetição somente do operando inválido, preservação do operando válido, repetição do divisor e retorno ao menu após resultado excessivo em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
+- [X] T015 [P] [US2] Acrescentar testes para operação inválida, operando inválido no domínio, divisor zero e resultados brutos fora do intervalo: adição/subtração nos limites inclusivos e valores externos, multiplicação de ±1000000000 por ±1 nos limites e por ±1,000001 fora, divisão de ±1000000000 por ±1 nos limites e por ±0,999999 fora; em `tests/Calculator.Tests/CalculatorEngineTests.cs`.
+- [X] T016 [P] [US2] Acrescentar testes para texto vazio/malformado, formatos proibidos, precisão excedida, limite de entrada e precedência de classificação em `tests/Calculator.Tests/NumberParserTests.cs`.
+- [X] T017 [P] [US2] Acrescentar testes de sessão para menu repetido após operação inválida, repetição somente do operando inválido, preservação do operando válido, repetição do divisor e retorno ao menu após resultado excessivo em `tests/Calculator.Tests/ConsoleSessionTests.cs`.
 
 ### Implementação da história 2
 
-- [ ] T018 [P] [US2] Implementar erros específicos para operação/operandos inválidos, divisão por zero e resultado fora do intervalo bruto; após rejeitar divisor zero, na divisão verificar `abs(first) > 1000000000 * abs(second)` antes de executar `/`, aceitar a igualdade no limite e validar o resultado bruto antes do arredondamento em `src/Calculator/Domain/CalculatorEngine.cs`.
-- [ ] T019 [P] [US2] Mapear erros de parsing e domínio para mensagens em português e aplicar recuperação aprovada: repetir menu, repetir somente o operando, repetir divisor ou descartar tentativa e voltar ao menu em `src/Calculator/Presentation/NumberParser.cs` e `src/Calculator/Presentation/ConsoleSession.cs`.
+- [X] T018 [P] [US2] Implementar erros específicos para operação/operandos inválidos, divisão por zero e resultado fora do intervalo bruto; após rejeitar divisor zero, na divisão verificar `abs(first) > 1000000000 * abs(second)` antes de executar `/`, aceitar a igualdade no limite e validar o resultado bruto antes do arredondamento em `src/Calculator/Domain/CalculatorEngine.cs`.
+- [X] T019 [P] [US2] Mapear erros de parsing e domínio para mensagens em português e aplicar recuperação aprovada: repetir menu, repetir somente o operando, repetir divisor ou descartar tentativa e voltar ao menu em `src/Calculator/Presentation/NumberParser.cs` e `src/Calculator/Presentation/ConsoleSession.cs`.
 
 **Marco**: Todos os erros previstos orientam o próximo pedido, preservam dados conforme FR-014 e permitem continuar na mesma sessão.
 
-- [ ] T025 Validar o incremento da história 2 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os casos de limite das quatro operações, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
+- [X] T025 Validar o incremento da história 2 antes do respectivo commit: compilar o projeto de produção e executar todos os testes existentes, incluindo os casos de limite das quatro operações, corrigindo falhas em `src/Calculator/Calculator.csproj`, `tests/Calculator.Tests/Calculator.Tests.csproj` e nos arquivos afetados.
 
 ## Fase 5: História do usuário 3 — Repetir cálculos e encerrar (Prioridade: P2)
 

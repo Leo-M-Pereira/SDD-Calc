@@ -1,3 +1,4 @@
+using System.Globalization;
 using Calculator.Domain;
 
 namespace Calculator.Tests;
@@ -42,5 +43,66 @@ public sealed class CalculatorEngineTests
 
         Assert.IsTrue(result.IsSuccess);
         Assert.AreEqual(0.3333333333333333333333333333m, result.Value);
+    }
+
+    [TestMethod]
+    [DataRow((Operation)99, "2", "3", CalculationError.InvalidOperation)]
+    [DataRow(Operation.Addition, "1000000000.000001", "3", CalculationError.InvalidOperand)]
+    [DataRow(Operation.Division, "5", "0", CalculationError.DivisionByZero)]
+    [DataRow(Operation.Division, "0", "0", CalculationError.DivisionByZero)]
+    public void Calculate_InvalidDomainConditions_ReturnsSpecificError(
+        Operation operation,
+        string first,
+        string second,
+        CalculationError expectedError)
+    {
+        var firstValue = decimal.Parse(first, CultureInfo.InvariantCulture);
+        var secondValue = decimal.Parse(second, CultureInfo.InvariantCulture);
+        var result = new CalculatorEngine().Calculate(operation, firstValue, secondValue);
+
+        Assert.IsFalse(result.IsSuccess);
+        Assert.IsNull(result.Value);
+        Assert.AreEqual(expectedError, result.Error);
+    }
+
+    [TestMethod]
+    [DataRow(Operation.Addition, 1000000000.0, 0.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Addition, -1000000000.0, -0.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Addition, 1000000000.0, 0.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Addition, -1000000000.0, 0.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Subtraction, -1000000000.0, 0.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Subtraction, 1000000000.0, -0.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Subtraction, 1000000000.0, 0.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Subtraction, -1000000000.0, 0.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Multiplication, 1000000000.0, 1.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Multiplication, -1000000000.0, 1.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Multiplication, 1000000000.0, -1.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Multiplication, -1000000000.0, -1.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Multiplication, 1000000000.0, 1.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Multiplication, -1000000000.0, 1.000001, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Division, 1000000000.0, 1.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Division, -1000000000.0, 1.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Division, 1000000000.0, -1.0, CalculationError.None, -1000000000.0)]
+    [DataRow(Operation.Division, -1000000000.0, -1.0, CalculationError.None, 1000000000.0)]
+    [DataRow(Operation.Division, 1000000000.0, 0.999999, CalculationError.ResultOutOfRange, 0.0)]
+    [DataRow(Operation.Division, -1000000000.0, 0.999999, CalculationError.ResultOutOfRange, 0.0)]
+    public void Calculate_ResultBoundaries_ReturnsExpectedBoundaryOrError(
+        Operation operation,
+        double first,
+        double second,
+        CalculationError expectedError,
+        double expectedValue)
+    {
+        var result = new CalculatorEngine().Calculate(operation, (decimal)first, (decimal)second);
+
+        Assert.AreEqual(expectedError, result.Error);
+        if (expectedError == CalculationError.None)
+        {
+            Assert.AreEqual((decimal)expectedValue, result.Value);
+        }
+        else
+        {
+            Assert.IsNull(result.Value);
+        }
     }
 }

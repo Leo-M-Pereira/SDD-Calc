@@ -22,4 +22,56 @@ public sealed class NumberParserTests
         Assert.AreEqual((decimal)expected, value);
         Assert.AreEqual(InputError.None, error);
     }
+
+    [TestMethod]
+    [DataRow("", InputError.InvalidFormat)]
+    [DataRow("   ", InputError.InvalidFormat)]
+    [DataRow("abc", InputError.InvalidFormat)]
+    [DataRow("1.5", InputError.InvalidFormat)]
+    [DataRow("1.000,5", InputError.InvalidFormat)]
+    [DataRow("1 000", InputError.InvalidFormat)]
+    [DataRow("1e3", InputError.InvalidFormat)]
+    [DataRow(",5", InputError.InvalidFormat)]
+    [DataRow("5,", InputError.InvalidFormat)]
+    public void TryParse_InvalidFormat_ReturnsFormatError(string input, InputError expectedError)
+    {
+        var success = NumberParser.TryParse(input, out _, out var error);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(expectedError, error);
+    }
+
+    [TestMethod]
+    [DataRow("0,1234567", InputError.PrecisionExceeded)]
+    [DataRow("0,12345670", InputError.PrecisionExceeded)]
+    [DataRow("1000000000,000001", InputError.OutOfRange)]
+    [DataRow("-1000000000,000001", InputError.OutOfRange)]
+    [DataRow("999999999999999999999999999999999999", InputError.OutOfRange)]
+    public void TryParse_PrecisionAndRangeViolations_ReturnExpectedError(
+        string input,
+        InputError expectedError)
+    {
+        var success = NumberParser.TryParse(input, out _, out var error);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(expectedError, error);
+    }
+
+    [TestMethod]
+    public void TryParse_MalformedTextWithExcessPrecision_PrioritizesFormatError()
+    {
+        var success = NumberParser.TryParse("1.000,0000001", out _, out var error);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(InputError.InvalidFormat, error);
+    }
+
+    [TestMethod]
+    public void TryParse_OutOfRangeValueWithExcessPrecision_PrioritizesPrecisionError()
+    {
+        var success = NumberParser.TryParse("1000000000,0000001", out _, out var error);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(InputError.PrecisionExceeded, error);
+    }
 }

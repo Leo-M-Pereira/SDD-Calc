@@ -46,4 +46,93 @@ public sealed class ConsoleSessionTests
         Assert.IsFalse(transcript.Contains("primeiro número", StringComparison.OrdinalIgnoreCase));
         Assert.IsFalse(transcript.Contains("segundo número", StringComparison.OrdinalIgnoreCase));
     }
+
+    [TestMethod]
+    public void Run_InvalidOperation_ExplainsAndRepeatsMenu()
+    {
+        using var input = new StringReader(string.Join(Environment.NewLine, "9", "1", "2", "3"));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        StringAssert.Contains(transcript, "Operação inválida.");
+        StringAssert.Contains(transcript, "Resultado: 5");
+        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
+    }
+
+    [TestMethod]
+    [DataRow(true, "abc", "Número inválido.", "Informe o primeiro número:", "Informe o segundo número:")]
+    [DataRow(false, "1.5", "Número inválido.", "Informe o segundo número", "Informe o primeiro número:")]
+    [DataRow(false, "0,1234567", "seis casas decimais", "Informe o segundo número", "Informe o primeiro número:")]
+    [DataRow(true, "1000000000,000001", "entre -1000000000 e 1000000000", "Informe o primeiro número:", "Informe o segundo número:")]
+    public void Run_InvalidNumber_ExplainsAndRepeatsOnlyThatOperand(
+        bool invalidFirst,
+        string invalidValue,
+        string expectedMessage,
+        string repeatedPrompt,
+        string preservedPrompt)
+    {
+        var lines = invalidFirst
+            ? new[] { "1", invalidValue, "2", "3" }
+            : new[] { "1", "2", invalidValue, "3" };
+        using var input = new StringReader(string.Join(Environment.NewLine, lines));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        StringAssert.Contains(transcript, expectedMessage);
+        StringAssert.Contains(transcript, "Resultado: 5");
+        Assert.AreEqual(2, CountOccurrences(transcript, repeatedPrompt));
+        Assert.AreEqual(1, CountOccurrences(transcript, preservedPrompt));
+        Assert.AreEqual(1, CountOccurrences(transcript, "Calculadora"));
+    }
+
+    [TestMethod]
+    public void Run_DivisionByZero_ExplainsAndRepeatsOnlyDivisor()
+    {
+        using var input = new StringReader(string.Join(Environment.NewLine, "4", "5", "0", "2"));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        StringAssert.Contains(transcript, "Não é possível dividir por zero.");
+        StringAssert.Contains(transcript, "Resultado: 2,5");
+        Assert.AreEqual(1, CountOccurrences(transcript, "Informe o primeiro número:"));
+        Assert.AreEqual(2, CountOccurrences(transcript, "Informe o segundo número"));
+    }
+
+    [TestMethod]
+    [DataRow("1", "1000000000", "0,000001")]
+    [DataRow("2", "-1000000000", "0,000001")]
+    [DataRow("3", "1000000000", "1,000001")]
+    [DataRow("4", "1000000000", "0,999999")]
+    public void Run_ExcessiveResult_ExplainsDiscardsOperandsAndReturnsToMenu(
+        string operation,
+        string first,
+        string second)
+    {
+        var lines = new[] { operation, first, second, "1", "2", "3" };
+        using var input = new StringReader(string.Join(Environment.NewLine, lines));
+        using var output = new StringWriter(CultureInfo.GetCultureInfo("pt-BR"));
+        var session = new ConsoleSession(input, output);
+
+        session.Run();
+
+        var transcript = output.ToString();
+        StringAssert.Contains(transcript, "O resultado excede o intervalo permitido.");
+        StringAssert.Contains(transcript, "Resultado: 5");
+        Assert.AreEqual(2, CountOccurrences(transcript, "Calculadora"));
+        Assert.AreEqual(2, CountOccurrences(transcript, "Informe o primeiro número:"));
+        Assert.AreEqual(2, CountOccurrences(transcript, "Informe o segundo número"));
+        Assert.AreEqual(1, CountOccurrences(transcript, "Resultado:"));
+    }
+
+    private static int CountOccurrences(string text, string value) =>
+        (text.Length - text.Replace(value, string.Empty, StringComparison.Ordinal).Length) / value.Length;
 }

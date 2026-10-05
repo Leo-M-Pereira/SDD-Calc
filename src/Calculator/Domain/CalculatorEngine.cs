@@ -19,6 +19,12 @@ public sealed class CalculatorEngine
             return CalculationResult.Failed(CalculationError.DivisionByZero);
         }
 
+        if (operation == Operation.Division &&
+            decimal.Abs(first) > NumberPolicy.MaximumValue * decimal.Abs(second))
+        {
+            return CalculationResult.Failed(CalculationError.ResultOutOfRange);
+        }
+
         try
         {
             var value = operation switch
@@ -30,7 +36,9 @@ public sealed class CalculatorEngine
                 _ => throw new ArgumentOutOfRangeException(nameof(operation))
             };
 
-            return CalculationResult.Succeeded(value);
+            return NumberPolicy.IsInRange(value)
+                ? CalculationResult.Succeeded(value)
+                : CalculationResult.Failed(CalculationError.ResultOutOfRange);
         }
         catch (OverflowException)
         {
